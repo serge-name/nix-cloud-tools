@@ -2,7 +2,7 @@
 let
   appimagePath = path + "/pkgs/build-support/appimage";
 
-  buildFHSUserEnvBubblewrapAltered = import ./appimage_tools.nix { inherit nixpkgs google-cloud-sdk; };
+  buildFHSUserEnvBubblewrapAltered = import ./build_fhs_user_env.nix { inherit nixpkgs google-cloud-sdk; };
 in nixpkgs.lens.override({
   appimageTools = nixpkgs.callPackage appimagePath {
     buildFHSUserEnv = buildFHSUserEnvBubblewrapAltered;
