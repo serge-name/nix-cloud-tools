@@ -2,6 +2,12 @@
 
 Here is a collection of cloud tools modified for my own needs
 
+```shell
+nix registry add mycloud github:serge-name/nix-cloud-tools
+nix profile install mycloud#google-cloud-sdk
+nix profile install mycloud#lens
+```
+
 ## google-cloud-sdk
 
 * Added `gke-gcloud-auth-plugin` component
