@@ -40,8 +40,19 @@ in x:
       (mkRoBind "${lensExtracted}/resources/x64/lens-k8s-proxy" "lens-k8s-proxy-orig")
 
       ''--tmpfs /home''
-      # FIMXE: add more restrictions for HOME
-      ''--bind $HOME $HOME''
+
+      ''--ro-bind $HOME/.Xauthority $HOME/.Xauthority''
+      ''--ro-bind-try $HOME/.config/fontconfig $HOME/.config/fontconfig''
+      ''--ro-bind-try $HOME/.config/gtk-2.0 $HOME/.config/gtk-2.0''
+      ''--ro-bind-try $HOME/.config/gtk-3.0 $HOME/.config/gtk-3.0''
+      ''--ro-bind-try $HOME/.config/user-dirs.dirs $HOME/.config/user-dirs.dirs''
+      ''--ro-bind-try $HOME/.local/share/fonts $HOME/.local/share/fonts''
+
+      ''--bind $HOME/.config/Lens $HOME/.config/Lens''
+      ''--bind $HOME/.k8slens $HOME/.k8slens''
+      ''--bind $HOME/.config/gcloud $HOME/.config/gcloud''
+      ''--bind $HOME/.kube $HOME/.kube''
+      ''--bind $HOME/Downloads $HOME/Downloads''
     ];
 
     extraInstallCommands = x.extraInstallCommands + ''
@@ -55,5 +66,5 @@ in x:
       chmod +x $out/bin/lens
     '';
 
-    # runScript = "${coreutils}/bin/ls -l $HOME";  # FIXME: debug
+    # runScript = "${coreutils}/bin/ls -la $HOME";  # FIXME: debug
   })
