@@ -9,11 +9,10 @@
   let
     system = "x86_64-linux";
     nixpkgs = inputs.nixpkgs.legacyPackages.${system};
-    path = inputs.nixpkgs.outPath;
   in {
-    packages = { ${system} = rec {
+    packages.${system} = {
       google-cloud-sdk = import ./packages/google-cloud-sdk { inherit nixpkgs; };
-      lens = import ./packages/lens { inherit nixpkgs google-cloud-sdk path; };
-    }; };
+      lens = import ./packages/lens { inherit nixpkgs; };
+    };
   };
 }
