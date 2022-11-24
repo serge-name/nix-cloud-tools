@@ -1,6 +1,7 @@
 { nixpkgs, google-cloud-sdk, ... }:
 let
-  inherit (nixpkgs) writeShellScript coreutils;
+  inherit (nixpkgs) buildFHSUserEnvBubblewrap writeShellScript
+                    bash coreutils kubernetes-helm kubectl;
 in x:
   let
     # FIXME: ugly
@@ -19,10 +20,10 @@ in x:
     '';
 
     wrapperHelm = writeShellScript "${x.name}-wrapper-helm" ''
-      exec ${nixpkgs.kubernetes-helm}/bin/helm "$@"
+      exec ${kubernetes-helm}/bin/helm "$@"
     '';
     wrapperKubectl = writeShellScript "${x.name}-wrapper-kubectl" ''
-      exec ${nixpkgs.kubectl}/bin/kubectl "$@"
+      exec ${kubectl}/bin/kubectl "$@"
     '';
     wrapperLensK8sProxy = writeShellScript "${x.name}-wrapper-lens-k8s-proxy" ''
       export PATH=${coreutils}/bin:${google-cloud-sdk}/bin:$PATH
@@ -31,7 +32,7 @@ in x:
 
       exec ${lensExtracted}/resources/x64/lens-k8s-proxy-orig "$@"
     '';
-  in nixpkgs.buildFHSUserEnvBubblewrap(x // rec {
+  in buildFHSUserEnvBubblewrap(x // rec {
     extraBwrapArgs = (x.extraBwrapArgs or []) ++ [
       ''--tmpfs ${lensExtracted}/resources/x64''
       (mkRoBind wrapperHelm "helm")
@@ -59,7 +60,7 @@ in x:
       lens=$(${coreutils}/bin/readlink -m $out/bin/lens)
       rm $out/bin/lens
       cat >$out/bin/lens <<__
-      #!${nixpkgs.bash}/bin/bash
+      #!${bash}/bin/bash
       chmod -R u+w "\$HOME/.config/Lens/extensions" || true
       exec $lens "\$@"
       __
